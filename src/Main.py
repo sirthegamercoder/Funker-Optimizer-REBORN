@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QApplication, QSplashScreen
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont, QIcon, QPixmap
 
-from core.constants import APP_NAME, CHOOSE_RESOURCE_PATH
+from core.constants import APP_NAME, RESOURCE_PATH
 from ui.main_window import FunkerOptimizerREBORN
 
 
@@ -13,7 +13,7 @@ def main():
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
 
-    splash_path = CHOOSE_RESOURCE_PATH("assets/for-splash.png")
+    splash_path = RESOURCE_PATH("assets/for-splash.png")
     if os.path.exists(splash_path):
         screen_splash = QPixmap(splash_path)
         intro_screen = QSplashScreen(screen_splash)
@@ -40,7 +40,7 @@ def main():
     font = QFont("Segoe UI", 10)
     app.setFont(font)
 
-    icon_path = CHOOSE_RESOURCE_PATH("assets/icon.ico")
+    icon_path = RESOURCE_PATH("assets/icon.ico")
     if os.path.exists(icon_path):
         app.setWindowIcon(QIcon(icon_path))
 
