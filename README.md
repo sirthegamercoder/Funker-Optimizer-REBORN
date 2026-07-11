@@ -11,7 +11,7 @@ Run `setup.bat` to install PySide6, QtAwesome, lxml and Pillow (if you run the a
 3. Set output folder and click Modify and Resize
 4. Wait until the process is complete
 
-> You can run the app in terminal by `python src\Main.py` and do steps 2-4
+> You can run the app via Terminal by going to Code > Download ZIP, then opening File Explorer, extracting the ZIP file, navigating to repository directory > src, right-click and select `Open in Terminal` and then running it with `python Main.py`. Once you're inside the application, follow steps 2–4.
 
 ## Contributing
 If you find a bug, please report it in the issues section!

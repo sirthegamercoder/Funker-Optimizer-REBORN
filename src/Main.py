@@ -13,7 +13,7 @@ def main():
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
 
-    splash_path = RESOURCE_PATH("src/assets/for-splash.png")
+    splash_path = RESOURCE_PATH("assets/for-splash.png")
     screen_splash = QPixmap(str(splash_path))
     intro_screen = QSplashScreen(screen_splash)
     intro_screen.show()
@@ -29,7 +29,7 @@ def main():
     font = QFont("Segoe UI", 10)
     app.setFont(font)
 
-    icon_path = RESOURCE_PATH("src/assets/icon.ico")
+    icon_path = RESOURCE_PATH("assets/icon.ico")
     if os.path.exists(icon_path):
         app.setWindowIcon(QIcon(str(icon_path)))
 
