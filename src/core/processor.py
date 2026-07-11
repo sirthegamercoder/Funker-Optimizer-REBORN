@@ -3,12 +3,14 @@ from PySide6.QtCore import QThread, Signal
 
 try:
     from lxml import etree
+
     HAS_LXML = True
 except ImportError:
     HAS_LXML = False
 
 try:
     from PIL import Image
+
     HAS_PIL = True
 except ImportError:
     HAS_PIL = False
@@ -50,8 +52,14 @@ class ProcessingThread(QThread):
 
             for subtexture in subtextures:
                 for attr in [
-                    "x", "y", "width", "height",
-                    "frameX", "frameY", "frameWidth", "frameHeight"
+                    "x",
+                    "y",
+                    "width",
+                    "height",
+                    "frameX",
+                    "frameY",
+                    "frameWidth",
+                    "frameHeight",
                 ]:
                     value = subtexture.get(attr)
                     if value is not None:
@@ -71,7 +79,11 @@ class ProcessingThread(QThread):
             new_height = int(original_height * (percentage / 100))
             new_size = (new_width, new_height)
 
-            resample_filter = Image.Resampling.LANCZOS if self.use_aliasing else Image.Resampling.NEAREST
+            resample_filter = (
+                Image.Resampling.LANCZOS
+                if self.use_aliasing
+                else Image.Resampling.NEAREST
+            )
             resized_img = img.resize(new_size, resample_filter)
             resized_img.save(output_path)
             return True

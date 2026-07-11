@@ -1,26 +1,44 @@
 import os
+import webbrowser
 from PySide6.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QVBoxLayout, QPushButton, QCheckBox,
-    QLabel, QFileDialog, QListWidget, QHBoxLayout, QFrame,
-    QGraphicsDropShadowEffect, QSizePolicy, QScrollArea,
-    QMessageBox
+    QApplication,
+    QMainWindow,
+    QWidget,
+    QVBoxLayout,
+    QPushButton,
+    QCheckBox,
+    QLabel,
+    QFileDialog,
+    QListWidget,
+    QHBoxLayout,
+    QFrame,
+    QGraphicsDropShadowEffect,
+    QSizePolicy,
+    QScrollArea,
+    QMessageBox,
+    QMenuBar,
+    QMenu,
 )
 from PySide6.QtCore import Qt, QSize, QPoint
-from PySide6.QtGui import (
-    QFont, QPalette, QColor, QLinearGradient, QBrush,
-    QScreen
-)
+from PySide6.QtGui import QFont, QPalette, QColor, QLinearGradient, QBrush, QScreen
 
 from core.constants import (
-    APP_NAME, COLOR_PRIMARY, COLOR_SECONDARY, COLOR_DARK,
-    COLOR_TEXT, COLOR_WHITE, COLOR_YELLOW, DIVISION_NUMBER,
-    DEFAULT_ANTIALIASING
+    APP_NAME,
+    COLOR_PRIMARY,
+    COLOR_SECONDARY,
+    COLOR_DARK,
+    COLOR_TEXT,
+    COLOR_WHITE,
+    COLOR_YELLOW,
+    DIVISION_NUMBER,
+    DEFAULT_ANTIALIASING,
 )
 from core.processor import ProcessingThread, HAS_LXML, HAS_PIL
-from ui.widgets import ModernButton, IconLabel
+from ui.widgets import ModernButton, IconLabel, ModernCheckBox
 
 try:
     import qtawesome as qta
+
     HAS_QTAWESOME = True
 except ImportError:
     HAS_QTAWESOME = False
@@ -41,6 +59,7 @@ class FunkerOptimizerREBORN(QMainWindow):
         self.setup_theme()
         self.center_window()
         self.setup_ui()
+        self.setup_menu()
 
     def center_window(self):
         screen = QScreen.availableGeometry(QApplication.primaryScreen())
@@ -71,6 +90,109 @@ class FunkerOptimizerREBORN(QMainWindow):
         palette.setColor(QPalette.HighlightedText, QColor(13, 17, 45))
 
         self.setPalette(palette)
+
+    def setup_menu(self):
+        menubar = self.menuBar()
+        menubar.setStyleSheet("""
+            QMenuBar {
+                background-color: rgba(13, 17, 45, 200);
+                color: #B0BEC5;
+                border: none;
+                padding: 4px 10px;
+                font-size: 13px;
+                font-weight: 500;
+            }
+            QMenuBar::item {
+                background-color: transparent;
+                padding: 6px 12px;
+                border-radius: 4px;
+            }
+            QMenuBar::item:selected {
+                background-color: rgba(79, 195, 247, 20);
+                color: #4FC3F7;
+            }
+            QMenuBar::item:pressed {
+                background-color: rgba(79, 195, 247, 30);
+            }
+            QMenu {
+                background-color: rgba(13, 17, 45, 240);
+                color: #B0BEC5;
+                border: 1px solid #2C3E6B;
+                border-radius: 8px;
+                padding: 6px 4px;
+                font-size: 13px;
+            }
+            QMenu::item {
+                padding: 8px 30px 8px 20px;
+                border-radius: 4px;
+                margin: 2px 4px;
+            }
+            QMenu::item:selected {
+                background-color: rgba(79, 195, 247, 25);
+                color: #4FC3F7;
+            }
+            QMenu::item:pressed {
+                background-color: rgba(79, 195, 247, 35);
+            }
+            QMenu::separator {
+                height: 1px;
+                background: rgba(79, 195, 247, 20);
+                margin: 4px 10px;
+            }
+        """)
+
+        help_menu = menubar.addMenu("&Help")
+        help_menu.setStyleSheet("""
+            QMenu {
+                background-color: rgba(13, 17, 45, 240);
+                color: #B0BEC5;
+                border: 1px solid #2C3E6B;
+                border-radius: 8px;
+                padding: 6px 4px;
+            }
+            QMenu::item {
+                padding: 8px 30px 8px 20px;
+                border-radius: 4px;
+                margin: 2px 4px;
+            }
+            QMenu::item:selected {
+                background-color: rgba(79, 195, 247, 25);
+                color: #4FC3F7;
+            }
+        """)
+
+        github_action = help_menu.addAction("GitHub")
+        github_action.triggered.connect(
+            lambda: self.open_url(
+                "https://github.com/sirthegamercoder/Funker-Optimizer-REBORN"
+            )
+        )
+
+        report_bug_action = help_menu.addAction("Report Bug")
+        report_bug_action.triggered.connect(
+            lambda: self.open_url(
+                "https://github.com/sirthegamercoder/Funker-Optimizer-REBORN/issues"
+            )
+        )
+
+        help_menu.addSeparator()
+
+        web_action = help_menu.addAction("UncertainProd Web")
+        web_action.triggered.connect(
+            lambda: self.open_url(
+                "https://uncertainprod.github.io/FNF-Spritesheet-XML-generator-Web/"
+            )
+        )
+
+    def open_url(self, url):
+        try:
+            webbrowser.open(url)
+        except Exception as e:
+            QMessageBox.warning(
+                self,
+                "Error Opening Browser",
+                f"Could not open the URL:\n{url}\n\nError: {str(e)}",
+            )
 
     def setup_ui(self):
         scroll_area = QScrollArea()
@@ -209,7 +331,9 @@ class FunkerOptimizerREBORN(QMainWindow):
         file_layout.setSpacing(12)
         file_layout.setContentsMargins(20, 15, 20, 15)
 
-        section_label_container = self.create_section_label("File Selection", "fa5s.folder-open")
+        section_label_container = self.create_section_label(
+            "File Selection", "fa5s.folder-open"
+        )
         file_layout.addWidget(section_label_container)
 
         buttons_layout = QHBoxLayout()
@@ -310,7 +434,9 @@ class FunkerOptimizerREBORN(QMainWindow):
             output_layout.addWidget(output_icon)
 
         self.output_label = QLabel("Output folder: not set")
-        self.output_label.setStyleSheet("color: #B0BEC5; font-size: 11px; padding: 0px;")
+        self.output_label.setStyleSheet(
+            "color: #B0BEC5; font-size: 11px; padding: 0px;"
+        )
         self.output_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         output_layout.addWidget(self.output_label)
 
@@ -472,31 +598,7 @@ class FunkerOptimizerREBORN(QMainWindow):
             aa_icon = IconLabel("fa5s.magic", COLOR_PRIMARY, 18, self)
             aa_layout.addWidget(aa_icon)
 
-        self.aa_checkbox = QCheckBox("  Anti-aliasing")
-        self.aa_checkbox.setStyleSheet("""
-            QCheckBox {
-                color: #B0BEC5;
-                font-size: 14px;
-                font-weight: 500;
-                padding: 0px;
-            }
-            QCheckBox::indicator {
-                width: 22px;
-                height: 22px;
-                border-radius: 6px;
-            }
-            QCheckBox::indicator:unchecked {
-                background-color: rgba(26, 35, 126, 50);
-                border: 2px solid #2C3E6B;
-            }
-            QCheckBox::indicator:checked {
-                background-color: #4FC3F7;
-                border: 2px solid #4FC3F7;
-            }
-            QCheckBox::indicator:hover {
-                border-color: #4FC3F7;
-            }
-        """)
+        self.aa_checkbox = ModernCheckBox("Anti-aliasing", checked=DEFAULT_ANTIALIASING)
         self.aa_checkbox.setChecked(DEFAULT_ANTIALIASING)
         aa_layout.addWidget(self.aa_checkbox)
         aa_layout.addStretch()
