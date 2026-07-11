@@ -15,3 +15,5 @@ Run `setup.bat` to install PySide6, QtAwesome, lxml and Pillow (if you run the a
 
 ## Contributing
 If you find a bug, please report it in the issues section!
+
+[![](https://gamebanana.com/tools/embeddables/23363?type=large)](https://gamebanana.com/tools/23363)
