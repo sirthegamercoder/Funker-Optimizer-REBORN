@@ -184,6 +184,13 @@ class FunkerOptimizerREBORN(QMainWindow):
             )
         )
 
+        forawv_action = help_menu.addAction("Try Web Version")
+        forawv_action.triggered.connect(
+            lambda: self.open_url(
+                "https://sirthegamercoder.github.io/Funker-Optimizer-REBORN/"
+            )
+        )
+
     def open_url(self, url):
         try:
             webbrowser.open(url)
