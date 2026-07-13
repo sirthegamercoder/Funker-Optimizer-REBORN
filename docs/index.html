@@ -1,75 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="apple-mobile-web-app-title" content="F.O.R" />
-    <meta name="description" content="Funker Optimizer REBORN is a remake of Funker Optimizer that features a new look while retaining the features of the original version">
-    <meta name="keywords" content="fnf, friday night funkin, funker, optimizer, spritesheet, xml"/>
-    <meta name="robots" content="notranslate">
-    <title>Funker Optimizer REBORN (an web version)</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="icon" type="image/png" href="assets/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-    <link rel="shortcut icon" href="assets/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
-    <link rel="manifest" href="assets/site.webmanifest" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="apple-mobile-web-app-title" content="F.O.R" />
+  <meta name="description" content="Funker Optimizer REBORN is a remake of Funker Optimizer that features a new look while retaining the features of the original version" />
+  <meta name="keywords" content="fnf, friday night funkin, funker, optimizer, spritesheet, xml, png" />
+  <meta name="robots" content="notranslate" />
+  <title>Funker Optimizer REBORN (an web version)</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0,1" />
+  <link rel="icon" type="image/png" href="assets/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="shortcut icon" href="assets/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <link rel="manifest" href="assets/site.webmanifest" />
 </head>
 <body>
-    <div class="app-card" id="app">
-        <div class="header">
-            <span class="header-emoji" style="font-size:28px; flex-shrink:0;">❤️</span>
-            <h1>Funker Optimizer <span class="reborn-text">REBORN</span></h1>
-            <span class="header-emoji" style="font-size:28px;color:#FFFF8D; flex-shrink:0;">⭐</span>
-        </div>
-        <div class="divider"></div>
+  <div class="m3-card" id="app">
+    <div class="title-row">
+      <div class="title-left">
+        <span class="material-symbols-outlined icon-fix icon-heart">favorite</span>
+        <span class="m3-title-large">Funker Optimizer <span class="reborn-text">REBORN</span></span>
+      </div>
+      <span class="material-symbols-outlined icon-fix icon-star">stars</span>
+    </div>
+    <div class="m3-divider"></div>
 
-        <div class="section-card">
-            <div class="section-title">
-                <span style="font-size:18px;">📂</span>
-                <span>File Selection</span>
-            </div>
-            <div class="file-buttons">
-                <button class="btn" id="loadXmlBtn"><span style="font-size:18px;">📄</span> Load XML Files</button>
-                <button class="btn" id="loadPngBtn"><span style="font-size:18px;">🖼️</span> Load Image Files</button>
-            </div>
-        </div>
-
-        <div class="section-card" style="margin-bottom: 10px;">
-            <div class="output-row">
-                <span class="output-label"><span style="font-size:16px;">📁</span> Output folder: <span id="outputFolderLabel" style="color:#B0BEC5;">not set</span></span>
-                <button class="btn btn-outline" id="selectOutputBtn" style="padding: 6px 18px;"><span style="font-size:16px;">📂</span> Select</button>
-            </div>
-        </div>
-
-        <div class="list-grid">
-            <div class="list-box" id="xmlListBox">
-                <div class="list-header"><span style="font-size:14px;color:#4FC3F7;">📄</span><span style="color:#4FC3F7;font-weight:600;font-size:12px;">XML Files</span></div>
-                <div id="xmlListContainer"><div class="list-empty">No XML files loaded</div></div>
-            </div>
-            <div class="list-box" id="pngListBox">
-                <div class="list-header"><span style="font-size:14px;color:#4FC3F7;">🖼️</span><span style="color:#4FC3F7;font-weight:600;font-size:12px;">Image Files</span></div>
-                <div id="pngListContainer"><div class="list-empty">No images loaded</div></div>
-            </div>
-        </div>
-
-        <div class="aa-row">
-            <span style="font-size:18px;color:#4FC3F7;">✨</span>
-            <label>
-                <input type="checkbox" id="aaCheckbox" checked /> Anti-aliasing
-            </label>
-        </div>
-
-        <button class="process-btn" id="processBtn">
-            <span style="font-size:22px;">▶️</span> Modify and Resize
+    <div class="m3-section">
+      <div class="m3-chip-row">
+        <span class="material-symbols-outlined">folder_open</span>
+        <span>File Selection</span>
+      </div>
+      <div class="file-group">
+        <button class="m3-btn" id="loadXmlBtn">
+          <span class="material-symbols-outlined">description</span> Load XML
         </button>
-
-        <div class="status-bar">
-            <span style="font-size:14px;color:#4FC3F7;">●</span>
-            <span class="status-text" id="statusText">Ready</span>
-        </div>
+        <button class="m3-btn" id="loadPngBtn">
+          <span class="material-symbols-outlined">image</span> Load PNG
+        </button>
+      </div>
     </div>
 
-    <script src="app.js"></script>
+    <div class="m3-section" style="margin-bottom: 10px;">
+      <div class="output-row">
+        <span class="output-label">
+          <span class="material-symbols-outlined">output</span>
+          Output folder: <span id="outputFolderLabel" style="color:#b0bec5;">not set</span>
+        </span>
+        <button class="m3-btn m3-btn-outlined" id="selectOutputBtn">
+          <span class="material-symbols-outlined">folder</span> Select
+        </button>
+      </div>
+    </div>
+
+    <div class="list-grid">
+      <div class="list-box" id="xmlListBox">
+        <div class="list-header">
+          <span class="material-symbols-outlined">description</span>
+          <span>XML Files</span>
+        </div>
+        <div id="xmlListContainer"><div class="list-empty">No XML loaded</div></div>
+      </div>
+      <div class="list-box" id="pngListBox">
+        <div class="list-header">
+          <span class="material-symbols-outlined">image</span>
+          <span>Image Files</span>
+        </div>
+        <div id="pngListContainer"><div class="list-empty">No images loaded</div></div>
+      </div>
+    </div>
+
+    <div class="aa-row">
+      <span class="material-symbols-outlined">auto_awesome</span>
+      <label>
+        Anti-aliasing
+        <input type="checkbox" id="aaCheckbox" checked />
+      </label>
+    </div>
+
+    <button class="process-btn" id="processBtn">
+      <span class="material-symbols-outlined">play_arrow</span> Modify and Resize
+    </button>
+
+    <div class="status-bar">
+      <span class="material-symbols-outlined">circle</span>
+      <span class="status-text" id="statusText">Ready</span>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
