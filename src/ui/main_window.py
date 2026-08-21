@@ -18,6 +18,8 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QMenuBar,
     QMenu,
+    QListWidgetItem,
+    QPushButton as QPushButtonWidget,
 )
 from PySide6.QtCore import Qt, QSize, QPoint
 from PySide6.QtGui import QFont, QPalette, QColor, QLinearGradient, QBrush, QScreen
@@ -32,9 +34,11 @@ from core.constants import (
     COLOR_YELLOW,
     DIVISION_NUMBER,
     DEFAULT_ANTIALIASING,
+    COLOR_BG_LIGHT,
+    COLOR_BG_DARK,
 )
 from core.processor import ProcessingThread, HAS_LXML, HAS_PIL
-from ui.widgets import ModernButton, IconLabel, ModernCheckBox
+from ui.widgets import ModernButton, IconLabel, ModernCheckBox, RemoveButton
 
 try:
     import qtawesome as qta
@@ -79,15 +83,15 @@ class FunkerOptimizerREBORN(QMainWindow):
         gradient.setColorAt(1, QColor(8, 12, 35))
 
         palette.setBrush(QPalette.Window, QBrush(gradient))
-        palette.setColor(QPalette.WindowText, QColor(176, 190, 197))
-        palette.setColor(QPalette.Base, QColor(26, 35, 126))
-        palette.setColor(QPalette.AlternateBase, QColor(26, 35, 126))
-        palette.setColor(QPalette.Text, QColor(176, 190, 197))
-        palette.setColor(QPalette.Button, QColor(26, 35, 126))
-        palette.setColor(QPalette.ButtonText, QColor(176, 190, 197))
+        palette.setColor(QPalette.WindowText, QColor(224, 224, 224))
+        palette.setColor(QPalette.Base, QColor(26, 35, 70))
+        palette.setColor(QPalette.AlternateBase, QColor(35, 45, 90))
+        palette.setColor(QPalette.Text, QColor(224, 224, 224))
+        palette.setColor(QPalette.Button, QColor(26, 35, 70))
+        palette.setColor(QPalette.ButtonText, QColor(224, 224, 224))
         palette.setColor(QPalette.BrightText, QColor(79, 195, 247))
         palette.setColor(QPalette.Highlight, QColor(79, 195, 247))
-        palette.setColor(QPalette.HighlightedText, QColor(13, 17, 45))
+        palette.setColor(QPalette.HighlightedText, QColor(255, 255, 255))
 
         self.setPalette(palette)
 
@@ -96,7 +100,7 @@ class FunkerOptimizerREBORN(QMainWindow):
         menubar.setStyleSheet("""
             QMenuBar {
                 background-color: rgba(13, 17, 45, 200);
-                color: #B0BEC5;
+                color: #E0E0E0;
                 border: none;
                 padding: 4px 10px;
                 font-size: 13px;
@@ -116,7 +120,7 @@ class FunkerOptimizerREBORN(QMainWindow):
             }
             QMenu {
                 background-color: rgba(13, 17, 45, 240);
-                color: #B0BEC5;
+                color: #E0E0E0;
                 border: 1px solid #2C3E6B;
                 border-radius: 8px;
                 padding: 6px 4px;
@@ -145,7 +149,7 @@ class FunkerOptimizerREBORN(QMainWindow):
         help_menu.setStyleSheet("""
             QMenu {
                 background-color: rgba(13, 17, 45, 240);
-                color: #B0BEC5;
+                color: #E0E0E0;
                 border: 1px solid #2C3E6B;
                 border-radius: 8px;
                 padding: 6px 4px;
@@ -263,6 +267,9 @@ class FunkerOptimizerREBORN(QMainWindow):
         list_container = self.create_file_lists()
         main_layout.addWidget(list_container)
 
+        list_controls = self.create_list_controls()
+        main_layout.addWidget(list_controls)
+
         aa_container = self.create_aa_checkbox()
         main_layout.addWidget(aa_container)
 
@@ -356,6 +363,35 @@ class FunkerOptimizerREBORN(QMainWindow):
         )
         buttons_layout.addWidget(self.png_button)
 
+        self.clear_all_button = self.create_file_button(
+            "  Clear All", "fa5s.trash", self.clear_all_files
+        )
+        self.clear_all_button.setStyleSheet(f"""
+            QPushButton {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #4A148C,
+                    stop:1 #6A1B9A);
+                color: #E0E0E0;
+                border: 1px solid #7B1FA2;
+                border-radius: 10px;
+                font-size: 13px;
+                font-weight: 600;
+                padding: 10px 18px;
+                text-align: left;
+            }}
+            QPushButton:hover {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #6A1B9A,
+                    stop:1 #7B1FA2);
+                border-color: #CE93D8;
+                color: #CE93D8;
+            }}
+            QPushButton:pressed {{
+                background: #2A0A4A;
+            }}
+        """)
+        buttons_layout.addWidget(self.clear_all_button)
+
         file_layout.addLayout(buttons_layout)
         return file_section
 
@@ -400,7 +436,7 @@ class FunkerOptimizerREBORN(QMainWindow):
                     stop:0 #1A237E,
                     stop:1 #283593);
                 color: #E0E0E0;
-                border: 1px solid #2C3E6B;
+                border: 1px solid #3A4E8B;
                 border-radius: 10px;
                 font-size: 13px;
                 font-weight: 600;
@@ -442,7 +478,7 @@ class FunkerOptimizerREBORN(QMainWindow):
 
         self.output_label = QLabel("Output folder: not set")
         self.output_label.setStyleSheet(
-            "color: #B0BEC5; font-size: 11px; padding: 0px;"
+            "color: #E0E0E0; font-size: 12px; padding: 0px; font-weight: 500;"
         )
         self.output_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         output_layout.addWidget(self.output_label)
@@ -460,7 +496,7 @@ class FunkerOptimizerREBORN(QMainWindow):
                     stop:0 #1A237E,
                     stop:1 #283593);
                 color: #E0E0E0;
-                border: 1px solid #2C3E6B;
+                border: 1px solid #3A4E8B;
                 border-radius: 10px;
                 font-size: 12px;
                 font-weight: 600;
@@ -553,6 +589,22 @@ class FunkerOptimizerREBORN(QMainWindow):
         layout.addWidget(label)
         layout.addStretch()
 
+        count_label = QLabel("(0)")
+        count_label.setStyleSheet(f"""
+            QLabel {{
+                color: {COLOR_TEXT};
+                font-size: 10px;
+                font-weight: normal;
+                background: transparent;
+                padding: 0px;
+            }}
+        """)
+        if text == "XML Files":
+            self.xml_count_label = count_label
+        else:
+            self.png_count_label = count_label
+        layout.addWidget(count_label)
+
         return header
 
     def create_list_widget(self):
@@ -561,32 +613,170 @@ class FunkerOptimizerREBORN(QMainWindow):
         list_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.MinimumExpanding)
         list_widget.setStyleSheet("""
             QListWidget {
-                background-color: rgba(13, 17, 45, 60);
-                color: #B0BEC5;
-                border: 1px solid #2C3E6B;
+                background-color: rgba(13, 17, 45, 180);
+                color: #E0E0E0;
+                border: 2px solid #2C3E6B;
                 border-radius: 8px;
-                font-size: 11px;
+                font-size: 12px;
                 padding: 8px;
                 font-family: 'Segoe UI';
+                font-weight: 500;
             }
             QListWidget::item {
-                padding: 6px 10px;
+                padding: 8px 12px;
                 border-radius: 4px;
                 margin: 2px 0;
+                color: #E0E0E0;
             }
             QListWidget::item:hover {
-                background-color: rgba(79, 195, 247, 15);
-                color: #4FC3F7;
+                background-color: rgba(79, 195, 247, 20);
+                color: #FFFFFF;
             }
             QListWidget::item:selected {
-                background-color: rgba(79, 195, 247, 25);
-                color: #4FC3F7;
+                background-color: rgba(79, 195, 247, 30);
+                color: #FFFFFF;
             }
             QListWidget::item:selected:active {
-                background-color: rgba(79, 195, 247, 30);
+                background-color: rgba(79, 195, 247, 35);
+                color: #FFFFFF;
             }
         """)
         return list_widget
+
+    def create_list_controls(self):
+        container = QWidget()
+        container.setStyleSheet("""
+            QWidget {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                    stop:0 rgba(26, 35, 126, 20),
+                    stop:1 rgba(26, 35, 126, 10));
+                border-radius: 8px;
+                border: 1px solid rgba(79, 195, 247, 10);
+            }
+        """)
+        layout = QHBoxLayout(container)
+        layout.setContentsMargins(15, 10, 15, 10)
+        layout.setSpacing(15)
+
+        self.remove_selected_button = ModernButton(
+            "Remove Selected", "fa5s.minus-circle", "#FF5252"
+        )
+        self.remove_selected_button.setStyleSheet(f"""
+            QPushButton {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #4A148C,
+                    stop:1 #6A1B9A);
+                color: #E0E0E0;
+                border: 1px solid #7B1FA2;
+                border-radius: 10px;
+                font-size: 12px;
+                font-weight: 600;
+                padding: 8px 16px;
+            }}
+            QPushButton:hover {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #6A1B9A,
+                    stop:1 #7B1FA2);
+                border-color: #CE93D8;
+                color: #CE93D8;
+            }}
+            QPushButton:pressed {{
+                background: #2A0A4A;
+            }}
+            QPushButton:disabled {{
+                background: rgba(26, 35, 70, 50);
+                color: #455A64;
+                border-color: #455A64;
+            }}
+        """)
+        self.remove_selected_button.clicked.connect(self.remove_selected_files)
+        self.remove_selected_button.setEnabled(False)
+        layout.addWidget(self.remove_selected_button)
+
+        self.remove_all_xml_button = ModernButton(
+            "Clear XML", "fa5s.file-code", "#FF5252"
+        )
+        self.remove_all_xml_button.setStyleSheet(f"""
+            QPushButton {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #4A148C,
+                    stop:1 #6A1B9A);
+                color: #E0E0E0;
+                border: 1px solid #7B1FA2;
+                border-radius: 10px;
+                font-size: 12px;
+                font-weight: 600;
+                padding: 8px 16px;
+            }}
+            QPushButton:hover {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #6A1B9A,
+                    stop:1 #7B1FA2);
+                border-color: #CE93D8;
+                color: #CE93D8;
+            }}
+            QPushButton:pressed {{
+                background: #2A0A4A;
+            }}
+            QPushButton:disabled {{
+                background: rgba(26, 35, 70, 50);
+                color: #455A64;
+                border-color: #455A64;
+            }}
+        """)
+        self.remove_all_xml_button.clicked.connect(self.remove_all_xml)
+        self.remove_all_xml_button.setEnabled(False)
+        layout.addWidget(self.remove_all_xml_button)
+
+        self.remove_all_png_button = ModernButton(
+            "Clear Images", "fa5s.image", "#FF5252"
+        )
+        self.remove_all_png_button.setStyleSheet(f"""
+            QPushButton {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #4A148C,
+                    stop:1 #6A1B9A);
+                color: #E0E0E0;
+                border: 1px solid #7B1FA2;
+                border-radius: 10px;
+                font-size: 12px;
+                font-weight: 600;
+                padding: 8px 16px;
+            }}
+            QPushButton:hover {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #6A1B9A,
+                    stop:1 #7B1FA2);
+                border-color: #CE93D8;
+                color: #CE93D8;
+            }}
+            QPushButton:pressed {{
+                background: #2A0A4A;
+            }}
+            QPushButton:disabled {{
+                background: rgba(26, 35, 70, 50);
+                color: #455A64;
+                border-color: #455A64;
+            }}
+        """)
+        self.remove_all_png_button.clicked.connect(self.remove_all_png)
+        self.remove_all_png_button.setEnabled(False)
+        layout.addWidget(self.remove_all_png_button)
+
+        layout.addStretch()
+
+        self.file_count_label = QLabel("Total: 0 files")
+        self.file_count_label.setStyleSheet("""
+            QLabel {
+                color: #E0E0E0;
+                font-size: 12px;
+                font-weight: 500;
+                padding: 0px 10px;
+            }
+        """)
+        layout.addWidget(self.file_count_label)
+
+        return container
 
     def create_aa_checkbox(self):
         aa_container = QWidget()
@@ -622,7 +812,7 @@ class FunkerOptimizerREBORN(QMainWindow):
                     stop:0.3 #1565C0,
                     stop:0.7 #1565C0,
                     stop:1 #0D47A1);
-                color: {COLOR_PRIMARY};
+                color: #FFFFFF;
                 border: 2px solid {COLOR_PRIMARY};
                 border-radius: 12px;
                 font-size: 16px;
@@ -676,9 +866,9 @@ class FunkerOptimizerREBORN(QMainWindow):
         self.status_label.setAlignment(Qt.AlignCenter)
         self.status_label.setStyleSheet("""
             QLabel {
-                color: #B0BEC5;
-                font-size: 12px;
-                font-weight: 500;
+                color: #E0E0E0;
+                font-size: 13px;
+                font-weight: 600;
                 padding: 0px;
             }
         """)
@@ -692,11 +882,11 @@ class FunkerOptimizerREBORN(QMainWindow):
             self, "Select XML Files", "", "XML Files (*.xml)"
         )
         if files:
-            self.xml_file_paths = files
-            self.xml_list.clear()
+            self.xml_file_paths.extend(files)
             for file in files:
                 self.xml_list.addItem(os.path.basename(file))
             self.status_label.setText(f"Loaded {len(files)} XML file(s)")
+            self.update_file_counts()
             self.update_batch_status()
 
     def load_png_files(self):
@@ -704,11 +894,11 @@ class FunkerOptimizerREBORN(QMainWindow):
             self, "Select PNG Image Files", "", "PNG Images (*.png)"
         )
         if files:
-            self.png_file_paths = files
-            self.png_list.clear()
+            self.png_file_paths.extend(files)
             for file in files:
                 self.png_list.addItem(os.path.basename(file))
             self.status_label.setText(f"Loaded {len(files)} PNG file(s)")
+            self.update_file_counts()
             self.update_batch_status()
 
     def select_output_folder(self):
@@ -717,6 +907,71 @@ class FunkerOptimizerREBORN(QMainWindow):
             self.output_folder = folder
             self.output_label.setText(f"Output folder: {folder}")
             self.status_label.setText("Output folder set")
+
+    def update_file_counts(self):
+        xml_count = len(self.xml_file_paths)
+        png_count = len(self.png_file_paths)
+        total = xml_count + png_count
+
+        self.xml_count_label.setText(f"({xml_count})")
+        self.png_count_label.setText(f"({png_count})")
+        self.file_count_label.setText(f"Total: {total} files")
+
+        self.remove_selected_button.setEnabled(xml_count > 0 or png_count > 0)
+        self.remove_all_xml_button.setEnabled(xml_count > 0)
+        self.remove_all_png_button.setEnabled(png_count > 0)
+
+    def remove_selected_files(self):
+        current_row = self.xml_list.currentRow()
+        if current_row >= 0 and current_row < len(self.xml_file_paths):
+            del self.xml_file_paths[current_row]
+            self.xml_list.takeItem(current_row)
+
+        current_row = self.png_list.currentRow()
+        if current_row >= 0 and current_row < len(self.png_file_paths):
+            del self.png_file_paths[current_row]
+            self.png_list.takeItem(current_row)
+
+        self.update_file_counts()
+        self.update_batch_status()
+        self.status_label.setText("Selected file(s) removed")
+
+    def remove_all_xml(self):
+        if self.xml_file_paths:
+            self.xml_file_paths.clear()
+            self.xml_list.clear()
+            self.update_file_counts()
+            self.update_batch_status()
+            self.status_label.setText("All XML files removed")
+
+    def remove_all_png(self):
+        if self.png_file_paths:
+            self.png_file_paths.clear()
+            self.png_list.clear()
+            self.update_file_counts()
+            self.update_batch_status()
+            self.status_label.setText("All PNG files removed")
+
+    def clear_all_files(self):
+        if not self.xml_file_paths and not self.png_file_paths:
+            return
+
+        reply = QMessageBox.question(
+            self,
+            "Clear All Files",
+            "Are you sure you want to remove all loaded files?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No,
+        )
+
+        if reply == QMessageBox.Yes:
+            self.xml_file_paths.clear()
+            self.png_file_paths.clear()
+            self.xml_list.clear()
+            self.png_list.clear()
+            self.update_file_counts()
+            self.update_batch_status()
+            self.status_label.setText("All files cleared")
 
     def update_batch_status(self):
         xml_count = len(self.xml_file_paths)

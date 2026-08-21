@@ -73,24 +73,25 @@ class ModernCheckBox(QCheckBox):
         super().__init__(text, parent)
         self.setChecked(checked)
         self.setCursor(Qt.PointingHandCursor)
-        self.setFixedHeight(30)
+        self.setFixedHeight(34)
         self._hover = False
 
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
 
-        rect = QRect(0, 4, 22, 22)
+        rect = QRect(0, 6, 22, 22)
 
         if self.isChecked():
             border_color = QColor("#4FC3F7")
+            bg_color = QColor(79, 195, 247, 40)
         else:
-            border_color = QColor("#2C3E6B")
+            border_color = QColor("#3A4E8B")
+            bg_color = QColor(26, 35, 70, 80)
 
         if self._hover and not self.isChecked():
             border_color = QColor("#4FC3F7")
-
-        bg_color = QColor(26, 35, 126, 50)
+            bg_color = QColor(79, 195, 247, 20)
 
         painter.setPen(QPen(border_color, 2))
         painter.setBrush(bg_color)
@@ -100,13 +101,16 @@ class ModernCheckBox(QCheckBox):
             icon = qta.icon("fa5s.check", color="#4FC3F7")
             icon.paint(painter, rect, Qt.AlignCenter)
         elif self.isChecked():
-            painter.setPen(QPen(QColor("#4FC3F7"), 2))
-            painter.drawLine(6, 14, 9, 18)
-            painter.drawLine(9, 18, 16, 8)
+            painter.setPen(QPen(QColor("#4FC3F7"), 2.5))
+            painter.drawLine(6, 16, 10, 20)
+            painter.drawLine(10, 20, 18, 10)
 
-        text_rect = QRect(30, 0, self.width() - 30, self.height())
-        painter.setPen(QColor("#B0BEC5"))
-        painter.setFont(QFont("Segoe UI", 12, QFont.Normal))
+        text_rect = QRect(30, 2, self.width() - 30, self.height())
+
+        painter.setPen(QColor("#E0E0E0"))
+        painter.setFont(
+            QFont("Segoe UI", 12, QFont.Bold if self.isChecked() else QFont.Normal)
+        )
         painter.drawText(text_rect, Qt.AlignLeft | Qt.AlignVCenter, self.text())
 
         painter.end()
@@ -123,3 +127,29 @@ class ModernCheckBox(QCheckBox):
 
     def hitButton(self, pos):
         return True
+
+
+class RemoveButton(QPushButton):
+    def __init__(self, parent=None):
+        super().__init__("✕", parent)
+        self.setFixedSize(20, 20)
+        self.setCursor(Qt.PointingHandCursor)
+        self.setStyleSheet("""
+            QPushButton {
+                background-color: rgba(255, 82, 82, 20);
+                color: #FF5252;
+                border: 1px solid rgba(255, 82, 82, 40);
+                border-radius: 10px;
+                font-size: 12px;
+                font-weight: bold;
+                padding: 0px;
+            }
+            QPushButton:hover {
+                background-color: rgba(255, 82, 82, 60);
+                color: #FFFFFF;
+                border-color: #FF5252;
+            }
+            QPushButton:pressed {
+                background-color: rgba(255, 82, 82, 90);
+            }
+        """)
