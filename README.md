@@ -3,7 +3,7 @@
 A remake version of Funker Optimizer that completely revamps the app's interface using PySide6 and QtAwesome
 
 ## Setup
-Run `setup.bat` to install PySide6, QtAwesome, lxml and Pillow (if you run the app in terminal)
+Run `setup.bat` to install PySide6 Essentials, QtAwesome, lxml and Pillow (if you run the app in terminal)
 
 ## How to Use
 1. Run the app
