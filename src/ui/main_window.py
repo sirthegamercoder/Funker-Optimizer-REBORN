@@ -6,22 +6,18 @@ from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QPushButton,
-    QCheckBox,
     QLabel,
     QFileDialog,
     QListWidget,
     QHBoxLayout,
     QFrame,
-    QGraphicsDropShadowEffect,
     QSizePolicy,
     QScrollArea,
     QMessageBox,
     QMenuBar,
     QMenu,
-    QListWidgetItem,
-    QPushButton as QPushButtonWidget,
 )
-from PySide6.QtCore import Qt, QSize, QPoint
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont, QPalette, QColor, QLinearGradient, QBrush, QScreen
 
 from core.constants import (

@@ -1,8 +1,6 @@
 @echo off
-cd /d "%~dp0"
-echo.
 echo Install requirements
-pip install -r requirements.txt
+pip install -r src\requirements.txt
 echo.
 echo Requirements has installed!
-exit /b
+exit
