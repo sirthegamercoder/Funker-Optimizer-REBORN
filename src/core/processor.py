@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 from PySide6.QtCore import QThread, Signal
 
 try:
@@ -97,8 +97,8 @@ class ProcessingThread(QThread):
             if self.xml_files and HAS_LXML:
                 self.progress.emit(f"Processing {len(self.xml_files)} XML file(s)...")
                 for xml_file in self.xml_files:
-                    base_name = os.path.basename(xml_file)
-                    output_path = os.path.join(self.output_folder, base_name)
+                    base_name = Path(xml_file).name
+                    output_path = output_folder / base_name
 
                     tree = self.process_xml(xml_file)
                     if tree is not None:
@@ -110,8 +110,8 @@ class ProcessingThread(QThread):
             if self.png_files and HAS_PIL:
                 self.progress.emit(f"Processing {len(self.png_files)} image file(s)...")
                 for png_file in self.png_files:
-                    base_name = os.path.basename(png_file)
-                    output_path = os.path.join(self.output_folder, base_name)
+                    base_name = Path(png_file).name
+                    output_path = output_folder / base_name
 
                     if self.process_image(png_file, output_path, 50):
                         png_processed += 1

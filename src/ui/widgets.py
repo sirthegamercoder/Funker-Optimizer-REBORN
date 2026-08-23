@@ -2,8 +2,6 @@ from PySide6.QtWidgets import QPushButton, QLabel, QCheckBox, QGraphicsDropShado
 from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QSize, QPoint, QRect
 from PySide6.QtGui import QColor, QPainter, QPen, QFont
 
-from core.constants import COLOR_PRIMARY
-
 try:
     import qtawesome as qta
 
@@ -13,7 +11,7 @@ except ImportError:
 
 
 class ModernButton(QPushButton):
-    def __init__(self, text, icon=None, icon_color=COLOR_PRIMARY, parent=None):
+    def __init__(self, text, icon=None, icon_color="#4FC3F7", parent=None):
         super().__init__(text, parent)
         self.setMinimumHeight(44)
         self.setCursor(Qt.PointingHandCursor)
@@ -52,7 +50,7 @@ class ModernButton(QPushButton):
 
 
 class IconLabel(QLabel):
-    def __init__(self, icon, color=COLOR_PRIMARY, size=20, parent=None):
+    def __init__(self, icon, color="#4FC3F7", size=20, parent=None):
         super().__init__(parent)
         if HAS_QTAWESOME:
             self.setPixmap(qta.icon(icon, color=color).pixmap(size, size))
@@ -131,7 +129,7 @@ class ModernCheckBox(QCheckBox):
 
 class RemoveButton(QPushButton):
     def __init__(self, parent=None):
-        super().__init__("✕", parent)
+        super().__init__("X", parent)
         self.setFixedSize(20, 20)
         self.setCursor(Qt.PointingHandCursor)
         self.setStyleSheet("""

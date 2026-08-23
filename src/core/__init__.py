@@ -1,3 +1,2 @@
-from core.constants import *
-from core.utils import *
+from core.assets import *
 from core.processor import *

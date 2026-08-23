@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 import webbrowser
 from PySide6.QtWidgets import (
     QApplication,
@@ -19,20 +19,6 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont, QPalette, QColor, QLinearGradient, QBrush, QScreen
-
-from core.constants import (
-    APP_NAME,
-    COLOR_PRIMARY,
-    COLOR_SECONDARY,
-    COLOR_DARK,
-    COLOR_TEXT,
-    COLOR_WHITE,
-    COLOR_YELLOW,
-    DIVISION_NUMBER,
-    DEFAULT_ANTIALIASING,
-    COLOR_BG_LIGHT,
-    COLOR_BG_DARK,
-)
 from core.processor import ProcessingThread, HAS_LXML, HAS_PIL
 from ui.widgets import ModernButton, IconLabel, ModernCheckBox, RemoveButton
 
@@ -47,12 +33,12 @@ except ImportError:
 class FunkerOptimizerREBORN(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle(APP_NAME)
+        self.setWindowTitle("Funker Optimizer REBORN")
         self.setMinimumSize(800, 680)
 
         self.xml_file_paths = []
         self.png_file_paths = []
-        self.division_number = DIVISION_NUMBER
+        self.division_number = 2
         self.output_folder = ""
         self.processing_thread = None
 
@@ -284,16 +270,16 @@ class FunkerOptimizerREBORN(QMainWindow):
         header_layout.setSpacing(10)
 
         if HAS_QTAWESOME:
-            title_icon = IconLabel("fa5s.heart", COLOR_WHITE, 28, self)
+            title_icon = IconLabel("fa5s.heart", "#FFFFFF", 28, self)
             header_layout.addWidget(title_icon)
 
-        app_title = QLabel(APP_NAME)
+        app_title = QLabel("Funker Optimizer REBORN")
         app_title.setAlignment(Qt.AlignCenter)
         title_font = QFont("Segoe UI", 24, QFont.Bold)
         app_title.setFont(title_font)
         app_title.setStyleSheet(f"""
             QLabel {{
-                color: {COLOR_PRIMARY};
+                color: #4FC3F7;
                 background: transparent;
                 padding: 5px 10px;
                 letter-spacing: 1px;
@@ -302,7 +288,7 @@ class FunkerOptimizerREBORN(QMainWindow):
         header_layout.addWidget(app_title)
 
         if HAS_QTAWESOME:
-            title_icon2 = IconLabel("fa5s.star", COLOR_YELLOW, 28, self)
+            title_icon2 = IconLabel("fa5s.star", "#FFFF8D", 28, self)
             header_layout.addWidget(title_icon2)
 
         return header_widget
@@ -405,13 +391,13 @@ class FunkerOptimizerREBORN(QMainWindow):
         layout.setSpacing(10)
 
         if HAS_QTAWESOME:
-            icon = IconLabel(icon_name, COLOR_PRIMARY, 16, self)
+            icon = IconLabel(icon_name, "#4FC3F7", 16, self)
             layout.addWidget(icon)
 
         label = QLabel(text)
         label.setStyleSheet(f"""
             QLabel {{
-                color: {COLOR_PRIMARY};
+                color: #4FC3F7;
                 font-size: 11px;
                 font-weight: bold;
                 background: transparent;
@@ -425,7 +411,7 @@ class FunkerOptimizerREBORN(QMainWindow):
 
     def create_file_button(self, text, icon_name, callback):
         icon = icon_name if HAS_QTAWESOME else None
-        button = ModernButton(text, icon, COLOR_PRIMARY)
+        button = ModernButton(text, icon, "#4FC3F7")
         button.setStyleSheet(f"""
             QPushButton {{
                 background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
@@ -443,8 +429,8 @@ class FunkerOptimizerREBORN(QMainWindow):
                 background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
                     stop:0 #283593,
                     stop:1 #303F9F);
-                border-color: {COLOR_PRIMARY};
-                color: {COLOR_PRIMARY};
+                border-color: #4FC3F7;
+                color: #4FC3F7;
             }}
             QPushButton:pressed {{
                 background: #0D112D;
@@ -469,7 +455,7 @@ class FunkerOptimizerREBORN(QMainWindow):
         output_layout.setSpacing(12)
 
         if HAS_QTAWESOME:
-            output_icon = IconLabel("fa5s.folder", COLOR_PRIMARY, 18, self)
+            output_icon = IconLabel("fa5s.folder", "#4FC3F7", 18, self)
             output_layout.addWidget(output_icon)
 
         self.output_label = QLabel("Output folder: not set")
@@ -485,7 +471,7 @@ class FunkerOptimizerREBORN(QMainWindow):
         return output_section
 
     def create_output_button(self):
-        button = ModernButton("Select Output Folder", "fa5s.folder-open", COLOR_PRIMARY)
+        button = ModernButton("Select Output Folder", "fa5s.folder-open", "#4FC3F7")
         button.setStyleSheet(f"""
             QPushButton {{
                 background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
@@ -502,8 +488,8 @@ class FunkerOptimizerREBORN(QMainWindow):
                 background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
                     stop:0 #283593,
                     stop:1 #303F9F);
-                border-color: {COLOR_PRIMARY};
-                color: {COLOR_PRIMARY};
+                border-color: #4FC3F7;
+                color: #4FC3F7;
             }}
             QPushButton:pressed {{
                 background: #0D112D;
@@ -569,13 +555,13 @@ class FunkerOptimizerREBORN(QMainWindow):
         layout.setSpacing(10)
 
         if HAS_QTAWESOME:
-            icon = IconLabel(icon_name, COLOR_PRIMARY, 16, self)
+            icon = IconLabel(icon_name, "#4FC3F7", 16, self)
             layout.addWidget(icon)
 
         label = QLabel(text)
         label.setStyleSheet(f"""
             QLabel {{
-                color: {COLOR_PRIMARY};
+                color: #4FC3F7;
                 font-size: 11px;
                 font-weight: bold;
                 background: transparent;
@@ -588,7 +574,7 @@ class FunkerOptimizerREBORN(QMainWindow):
         count_label = QLabel("(0)")
         count_label.setStyleSheet(f"""
             QLabel {{
-                color: {COLOR_TEXT};
+                color: #E0E0E0;
                 font-size: 10px;
                 font-weight: normal;
                 background: transparent;
@@ -788,11 +774,11 @@ class FunkerOptimizerREBORN(QMainWindow):
         aa_layout.setSpacing(10)
 
         if HAS_QTAWESOME:
-            aa_icon = IconLabel("fa5s.magic", COLOR_PRIMARY, 18, self)
+            aa_icon = IconLabel("fa5s.magic", "#4FC3F7", 18, self)
             aa_layout.addWidget(aa_icon)
 
-        self.aa_checkbox = ModernCheckBox("Anti-aliasing", checked=DEFAULT_ANTIALIASING)
-        self.aa_checkbox.setChecked(DEFAULT_ANTIALIASING)
+        self.aa_checkbox = ModernCheckBox("Anti-aliasing", checked=True)
+        self.aa_checkbox.setChecked(True)
         aa_layout.addWidget(self.aa_checkbox)
         aa_layout.addStretch()
 
@@ -800,7 +786,7 @@ class FunkerOptimizerREBORN(QMainWindow):
 
     def create_process_button(self):
         icon = "fa5s.play" if HAS_QTAWESOME else None
-        button = ModernButton("  Modify and Resize", icon, COLOR_WHITE)
+        button = ModernButton("  Modify and Resize", icon, "#FFFFFF")
         button.setStyleSheet(f"""
             QPushButton {{
                 background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
@@ -809,7 +795,7 @@ class FunkerOptimizerREBORN(QMainWindow):
                     stop:0.7 #1565C0,
                     stop:1 #0D47A1);
                 color: #FFFFFF;
-                border: 2px solid {COLOR_PRIMARY};
+                border: 2px solid #4FC3F7;
                 border-radius: 12px;
                 font-size: 16px;
                 font-weight: bold;
@@ -827,7 +813,7 @@ class FunkerOptimizerREBORN(QMainWindow):
             }}
             QPushButton:pressed {{
                 background: #0D112D;
-                border-color: {COLOR_PRIMARY};
+                border-color: #4FC3F7;
             }}
             QPushButton:disabled {{
                 background: rgba(13, 17, 45, 80);
@@ -855,7 +841,7 @@ class FunkerOptimizerREBORN(QMainWindow):
         status_layout.setSpacing(10)
 
         if HAS_QTAWESOME:
-            status_icon = IconLabel("fa5s.circle", COLOR_PRIMARY, 12, self)
+            status_icon = IconLabel("fa5s.circle", "#4FC3F7", 12, self)
             status_layout.addWidget(status_icon)
 
         self.status_label = QLabel("Ready")
@@ -880,7 +866,7 @@ class FunkerOptimizerREBORN(QMainWindow):
         if files:
             self.xml_file_paths.extend(files)
             for file in files:
-                self.xml_list.addItem(os.path.basename(file))
+                self.xml_list.addItem(Path(file).name)
             self.status_label.setText(f"Loaded {len(files)} XML file(s)")
             self.update_file_counts()
             self.update_batch_status()
@@ -892,7 +878,7 @@ class FunkerOptimizerREBORN(QMainWindow):
         if files:
             self.png_file_paths.extend(files)
             for file in files:
-                self.png_list.addItem(os.path.basename(file))
+                self.png_list.addItem(Path(file).name)
             self.status_label.setText(f"Loaded {len(files)} PNG file(s)")
             self.update_file_counts()
             self.update_batch_status()
