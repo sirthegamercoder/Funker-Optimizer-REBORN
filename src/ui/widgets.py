@@ -1,4 +1,12 @@
-from PySide6.QtWidgets import QPushButton, QLabel, QCheckBox, QGraphicsDropShadowEffect
+from PySide6.QtWidgets import (
+    QPushButton,
+    QLabel,
+    QCheckBox,
+    QGraphicsDropShadowEffect,
+    QWidget,
+    QVBoxLayout,
+    QHBoxLayout,
+)
 from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QSize, QPoint, QRect
 from PySide6.QtGui import QColor, QPainter, QPen, QFont
 
@@ -151,3 +159,206 @@ class RemoveButton(QPushButton):
                 background-color: rgba(255, 82, 82, 90);
             }
         """)
+
+
+class DropArea(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.parent_window = parent
+        self.setMinimumHeight(180)
+        self.setMinimumWidth(300)
+        self.setAcceptDrops(True)
+        self.is_hovering = False
+
+        self.setAttribute(Qt.WA_StyledBackground, True)
+
+        layout = QVBoxLayout(self)
+        layout.setAlignment(Qt.AlignCenter)
+        layout.setSpacing(10)
+        layout.setContentsMargins(25, 20, 25, 20)
+
+        self.icon_label = QLabel()
+        self.icon_label.setFixedSize(48, 48)
+        self.icon_label.setAlignment(Qt.AlignCenter)
+        self.icon_label.setStyleSheet("""
+            QLabel {
+                background-color: rgba(79, 195, 247, 12);
+                border-radius: 12px;
+                padding: 6px;
+                margin: 0px;
+            }
+        """)
+        if HAS_QTAWESOME:
+            pixmap = qta.icon("fa5s.cloud-upload-alt", color="#4FC3F7").pixmap(32, 32)
+            self.icon_label.setPixmap(pixmap)
+        layout.addWidget(self.icon_label, alignment=Qt.AlignCenter)
+
+        self.title_label = QLabel("Drop here or click to browse")
+        self.title_label.setAlignment(Qt.AlignCenter)
+        self.title_label.setStyleSheet("""
+            QLabel {
+                color: #E0E0E0;
+                font-size: 13px;
+                font-weight: 500;
+                background-color: rgba(79, 195, 247, 8);
+                border-radius: 8px;
+                padding: 6px 16px;
+                margin: 0px;
+            }
+        """)
+        layout.addWidget(self.title_label, alignment=Qt.AlignCenter)
+
+        self.sub_label = QLabel(
+            "Supports XML and PNG files or folders containing XML and PNG files"
+        )
+        self.sub_label.setAlignment(Qt.AlignCenter)
+        self.sub_label.setStyleSheet("""
+            QLabel {
+                color: #78909C;
+                font-size: 11px;
+                background-color: rgba(79, 195, 247, 6);
+                border-radius: 6px;
+                padding: 4px 14px;
+                margin: 0px;
+            }
+        """)
+        layout.addWidget(self.sub_label, alignment=Qt.AlignCenter)
+
+        self.update_style(False)
+
+    def update_style(self, hovering):
+        if hovering:
+            self.setStyleSheet(f"""
+                QWidget {{
+                    background: rgba(79, 195, 247, 10);
+                    border: 2px solid rgba(79, 195, 247, 50);
+                    border-radius: 14px;
+                }}
+            """)
+
+            self.icon_label.setStyleSheet("""
+                QLabel {
+                    background-color: rgba(79, 195, 247, 25);
+                    border-radius: 12px;
+                    padding: 6px;
+                    margin: 0px;
+                }
+            """)
+            if HAS_QTAWESOME:
+                pixmap = qta.icon("fa5s.cloud-upload-alt", color="#64D8FF").pixmap(
+                    32, 32
+                )
+                self.icon_label.setPixmap(pixmap)
+
+            self.title_label.setStyleSheet("""
+                QLabel {
+                    color: #4FC3F7;
+                    font-size: 13px;
+                    font-weight: 500;
+                    background-color: rgba(79, 195, 247, 18);
+                    border-radius: 8px;
+                    padding: 6px 16px;
+                    margin: 0px;
+                }
+            """)
+
+            self.sub_label.setStyleSheet("""
+                QLabel {
+                    color: #90A4AE;
+                    font-size: 11px;
+                    background-color: rgba(79, 195, 247, 14);
+                    border-radius: 6px;
+                    padding: 4px 14px;
+                    margin: 0px;
+                }
+            """)
+        else:
+            self.setStyleSheet(f"""
+                QWidget {{
+                    background: rgba(26, 35, 70, 30);
+                    border: 2px dashed rgba(79, 195, 247, 15);
+                    border-radius: 14px;
+                }}
+            """)
+
+            self.icon_label.setStyleSheet("""
+                QLabel {
+                    background-color: rgba(79, 195, 247, 12);
+                    border-radius: 12px;
+                    padding: 6px;
+                    margin: 0px;
+                }
+            """)
+            if HAS_QTAWESOME:
+                pixmap = qta.icon("fa5s.cloud-upload-alt", color="#4FC3F7").pixmap(
+                    32, 32
+                )
+                self.icon_label.setPixmap(pixmap)
+
+            self.title_label.setStyleSheet("""
+                QLabel {
+                    color: #E0E0E0;
+                    font-size: 13px;
+                    font-weight: 500;
+                    background-color: rgba(79, 195, 247, 8);
+                    border-radius: 8px;
+                    padding: 6px 16px;
+                    margin: 0px;
+                }
+            """)
+
+            self.sub_label.setStyleSheet("""
+                QLabel {
+                    color: #78909C;
+                    font-size: 11px;
+                    background-color: rgba(79, 195, 247, 6);
+                    border-radius: 6px;
+                    padding: 4px 14px;
+                    margin: 0px;
+                }
+            """)
+
+    def enterEvent(self, event):
+        if hasattr(event, "mimeData"):
+            if event.mimeData().hasUrls():
+                self.is_hovering = True
+                self.update_style(True)
+        super().enterEvent(event)
+
+    def leaveEvent(self, event):
+        if not self.is_hovering:
+            self.update_style(False)
+        super().leaveEvent(event)
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasUrls():
+            self.is_hovering = True
+            self.update_style(True)
+            event.acceptProposedAction()
+        else:
+            event.ignore()
+
+    def dragLeaveEvent(self, event):
+        self.is_hovering = False
+        self.update_style(False)
+        event.accept()
+
+    def dragMoveEvent(self, event):
+        if event.mimeData().hasUrls():
+            event.acceptProposedAction()
+
+    def dropEvent(self, event):
+        self.is_hovering = False
+        self.update_style(False)
+
+        files = []
+        for url in event.mimeData().urls():
+            file_path = url.toLocalFile()
+            if file_path:
+                files.append(file_path)
+
+        if files and self.parent_window:
+            self.parent_window.process_dropped_files(files)
+            event.acceptProposedAction()
+        else:
+            event.ignore()

@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont, QPalette, QColor, QLinearGradient, QBrush, QScreen
 from core.processor import ProcessingThread, HAS_LXML, HAS_PIL
-from ui.widgets import ModernButton, IconLabel, ModernCheckBox, RemoveButton
+from ui.widgets import ModernButton, IconLabel, ModernCheckBox, RemoveButton, DropArea
 
 try:
     import qtawesome as qta
@@ -187,6 +187,45 @@ class FunkerOptimizerREBORN(QMainWindow):
                 f"Could not open the URL:\n{url}\n\nError: {str(e)}",
             )
 
+    def process_dropped_files(self, files):
+        xml_files = []
+        png_files = []
+
+        for file_path in files:
+            path = Path(file_path)
+            if path.is_file():
+                if path.suffix.lower() == ".xml":
+                    xml_files.append(str(path))
+                elif path.suffix.lower() == ".png":
+                    png_files.append(str(path))
+
+        for file_path in files:
+            path = Path(file_path)
+            if path.is_dir():
+                for file in path.rglob("*"):
+                    if file.is_file():
+                        if file.suffix.lower() == ".xml":
+                            xml_files.append(str(file))
+                        elif file.suffix.lower() == ".png":
+                            png_files.append(str(file))
+
+        if xml_files:
+            self.xml_file_paths.extend(xml_files)
+            for file in xml_files:
+                self.xml_list.addItem(Path(file).name)
+
+        if png_files:
+            self.png_file_paths.extend(png_files)
+            for file in png_files:
+                self.png_list.addItem(Path(file).name)
+
+        if xml_files or png_files:
+            self.status_label.setText(
+                f"Dropped {len(xml_files)} XML and {len(png_files)} PNG files"
+            )
+            self.update_file_counts()
+            self.update_batch_status()
+
     def setup_ui(self):
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
@@ -239,6 +278,9 @@ class FunkerOptimizerREBORN(QMainWindow):
 
         separator = self.create_separator()
         main_layout.addWidget(separator)
+
+        self.drop_area = DropArea(self)
+        main_layout.addWidget(self.drop_area)
 
         file_section = self.create_file_section()
         main_layout.addWidget(file_section)
