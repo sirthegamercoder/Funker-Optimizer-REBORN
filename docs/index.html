@@ -40,6 +40,13 @@
         <button class="m3-btn" id="loadPngBtn">
           <span class="material-symbols-outlined">image</span> Load PNG
         </button>
+        <button class="m3-btn m3-btn-danger" id="clearAllBtn" style="display:none;">
+          <span class="material-symbols-outlined">delete_forever</span> Clear All
+        </button>
+      </div>
+      <div class="drag-hint">
+        <span class="material-symbols-outlined">drag_indicator</span>
+        <span>Drag & drop files or <strong>folders</strong> containing XML/PNG files</span>
       </div>
     </div>
 
@@ -56,17 +63,19 @@
     </div>
 
     <div class="list-grid">
-      <div class="list-box" id="xmlListBox">
+      <div class="list-box drop-zone" id="xmlListBox" data-type="xml">
         <div class="list-header">
           <span class="material-symbols-outlined">description</span>
           <span>XML Files</span>
+          <span class="drop-zone-badge">Drop XML here</span>
         </div>
         <div id="xmlListContainer"><div class="list-empty">No XML loaded</div></div>
       </div>
-      <div class="list-box" id="pngListBox">
+      <div class="list-box drop-zone" id="pngListBox" data-type="png">
         <div class="list-header">
           <span class="material-symbols-outlined">image</span>
           <span>Image Files</span>
+          <span class="drop-zone-badge">Drop PNG here</span>
         </div>
         <div id="pngListContainer"><div class="list-empty">No images loaded</div></div>
       </div>
